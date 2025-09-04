@@ -1,10 +1,20 @@
 package io.github.williamandradesantana.produtosapi.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "produto")
 public class Produto {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private String id;
+    @Column(name = "nome")
     private String nome;
+    @Column(name = "descricao")
     private String descricao;
+    @Column(name = "preco")
     private Double preco;
 
     public String getId() {
