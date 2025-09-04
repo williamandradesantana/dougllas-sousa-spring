@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 public class Produto {
 
     @Id
-    @GeneratedValue
     @Column(name = "id")
     private String id;
     @Column(name = "nome")
