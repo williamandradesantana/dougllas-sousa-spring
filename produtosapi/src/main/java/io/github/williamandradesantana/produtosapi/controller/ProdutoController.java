@@ -4,6 +4,8 @@ import io.github.williamandradesantana.produtosapi.model.Produto;
 import io.github.williamandradesantana.produtosapi.repository.ProdutoRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -43,5 +45,10 @@ public class ProdutoController {
         produtoRepository.save(produto);
 
         return produto;
+    }
+
+    @GetMapping("/")
+    public List<Produto> buscar(@RequestParam("nome") String nome) {
+        return produtoRepository.findByNomeContainingIgnoreCase(nome);
     }
 }
