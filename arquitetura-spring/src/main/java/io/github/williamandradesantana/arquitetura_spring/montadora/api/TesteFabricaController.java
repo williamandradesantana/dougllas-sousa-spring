@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/arquitetura-spring")
+@RequestMapping("/carros")
 public class TesteFabricaController {
 
     @Autowired
