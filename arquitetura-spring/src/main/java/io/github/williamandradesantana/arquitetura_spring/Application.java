@@ -14,15 +14,14 @@ public class Application {
 //        SpringApplication.run(Application.class, args);
 
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Application.class);
+        builder.profiles("producao");
+        builder.bannerMode(Banner.Mode.OFF);
         builder.run(args);
 
-        builder.bannerMode(Banner.Mode.OFF);
-
         ConfigurableApplicationContext applicationContext = builder.context();
-//        var produtoRepository = applicationContext.getBean("produtoRepository");
 
-        builder.profiles("producao");
-//        builder.properties("spring.datasource.url=jdbc://");
+        // var produtoRepository = applicationContext.getBean("produtoRepository");
+        // builder.properties("spring.datasource.url=jdbc://");
 
         ConfigurableEnvironment environment = applicationContext.getEnvironment();
         String appliactionName = environment.getProperty("spring.application.name");
