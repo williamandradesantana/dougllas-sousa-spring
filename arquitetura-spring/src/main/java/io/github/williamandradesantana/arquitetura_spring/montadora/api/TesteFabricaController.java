@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TesteFabricaController {
 
     @Autowired
-    @Qualifier("motorTurbo")
+//    @Qualifier("motorTurbo")
+    @Turbo
     private Motor motor;
 
     @PostMapping("/")
