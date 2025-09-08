@@ -24,3 +24,4 @@ app:
     motor-padrao: 130
   config:
     variavel: X
+    valor1: 500
