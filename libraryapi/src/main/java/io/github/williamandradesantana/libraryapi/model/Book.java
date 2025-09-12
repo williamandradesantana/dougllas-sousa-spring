@@ -4,11 +4,12 @@ import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "book", schema = "public")
+@Table(name = "tb_books", schema = "public")
 @Data
 public class Book {
     @Id
@@ -30,7 +31,7 @@ public class Book {
     private Gender gender;
 
     @Column(name = "price", precision = 18, scale = 2)
-    private Double price;
+    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "author_id")

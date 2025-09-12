@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "author", schema = "public")
+@Table(name = "tb_authors", schema = "public")
 @Getter
 @Setter
 public class Author {
