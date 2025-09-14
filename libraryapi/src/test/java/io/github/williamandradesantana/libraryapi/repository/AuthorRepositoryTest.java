@@ -17,17 +17,17 @@ public class AuthorRepositoryTest {
     @Autowired
     private AuthorRepository authorRepository;
 
-//    @Test
-//    public void saveTest(){
-//        var author = new Author();
-//
-//        author.setName("Morgan");
-//        author.setNationality("American");
-//        author.setDateOfBirth(LocalDate.of(1990, 8, 15));
-//
-//        var authorSaved = authorRepository.save(author);
-//        System.out.println("Author with id: " + authorSaved.getId());
-//    }
+    @Test
+    public void saveTest(){
+        var author = new Author();
+
+        author.setName("James Clear");
+        author.setNationality("American");
+        author.setDateOfBirth(LocalDate.of(1990, 8, 15));
+
+        var authorSaved = authorRepository.save(author);
+        System.out.println("Author with id: " + authorSaved.getId());
+    }
 
     @Test
     public void quantityAuthorsInDatabase() {
@@ -54,6 +54,22 @@ public class AuthorRepositoryTest {
             foundAuthor.setNationality("Brazilian");
             authorRepository.save(foundAuthor);
         }
+    }
 
+    @Test
+    public void findAll() {
+        authorRepository.findAll().forEach(System.out::println);
+    }
+
+    @Test
+    public void deleteByIdTest() {
+        authorRepository.deleteById(UUID.fromString("7bd3bf2a-b04a-441e-9382-80e3931450c7"));
+    }
+
+    @Test
+    public void deleteTest() {
+        var id = UUID.fromString("b8cdf950-b4f1-42f5-a59f-56781dff975c");
+        var james = authorRepository.getReferenceById(id);
+        authorRepository.delete(james);
     }
 }
