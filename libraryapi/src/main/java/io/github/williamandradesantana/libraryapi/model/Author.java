@@ -25,6 +25,7 @@ public class Author {
     private String nationality;
 
     @OneToMany(mappedBy = "author")
+    @Transient
     private List<Book> books;
 
     @Override
