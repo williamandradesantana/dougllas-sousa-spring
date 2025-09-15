@@ -38,4 +38,44 @@ class BookRepositoryTest {
         book.setAuthor(author);
         bookRepository.save(book);
     }
+
+    @Test
+    void saveAuthorAndBookTest() {
+
+        var book = new Book();
+        book.setIsbn("9s2231232032");
+        book.setPrice(BigDecimal.valueOf(200.9));
+        book.setGender(Gender.ROMANCE);
+        book.setTitle("Animal Farm");
+        book.setPublishDate(LocalDate.of(1923, 1, 1));
+
+        var author = new Author();
+        author.setName("George Orwell");
+        author.setNationality("British");
+        author.setDateOfBirth(LocalDate.of(1903, 6, 25));
+
+        var authorSaved = authorRepository.save(author);
+
+        book.setAuthor(authorSaved);
+        bookRepository.save(book);
+    }
+
+    @Test
+    void operationsWithCascade() {
+
+        var book = new Book();
+        book.setIsbn("980");
+        book.setPrice(BigDecimal.valueOf(100.9));
+        book.setGender(Gender.BIOGRAPHY);
+        book.setTitle("Another Book");
+        book.setPublishDate(LocalDate.of(1923, 1, 1));
+
+        var author = new Author();
+        author.setName("Plato");
+        author.setNationality("Grecian");
+        author.setDateOfBirth(LocalDate.of(-428, 8, 15));
+
+        book.setAuthor(author);
+        bookRepository.save(book);
+    }
 }
