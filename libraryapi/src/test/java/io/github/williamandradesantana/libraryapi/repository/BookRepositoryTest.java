@@ -8,6 +8,7 @@ import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -101,5 +102,14 @@ class BookRepositoryTest {
     void delete() {
         var id = UUID.fromString("377f75b8-3d82-415d-8d71-65a1095fcc59");
         bookRepository.deleteById(id);
+    }
+
+    @Test
+    @Transactional
+    void searchBookTest() {
+        var id = UUID.fromString("94176239-f556-46ae-9041-0825bb7f9cd7");
+        var book = bookRepository.findById(id).orElse(null);
+        System.out.println(book.getTitle());
+        System.out.println(book.getAuthor().getName());
     }
 }
