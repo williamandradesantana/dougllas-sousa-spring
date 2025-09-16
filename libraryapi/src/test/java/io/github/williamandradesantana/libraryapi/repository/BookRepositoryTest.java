@@ -78,4 +78,28 @@ class BookRepositoryTest {
         book.setAuthor(author);
         bookRepository.save(book);
     }
+
+    @Test
+    void updateBookAuthor(){
+        var bookId = UUID.fromString("377f75b8-3d82-415d-8d71-65a1095fcc59");
+        var book = bookRepository
+                .findById(bookId)
+                .orElse(null);
+
+        var authorId = UUID.fromString("281e49cc-edc9-4da2-9285-1b51465dccb9");
+        var author = authorRepository
+                .findById(authorId)
+                .orElse(null);
+
+        book.setTitle("Republic");
+        book.setAuthor(author);
+
+        bookRepository.save(book);
+    }
+
+    @Test
+    void delete() {
+        var id = UUID.fromString("377f75b8-3d82-415d-8d71-65a1095fcc59");
+        bookRepository.deleteById(id);
+    }
 }
