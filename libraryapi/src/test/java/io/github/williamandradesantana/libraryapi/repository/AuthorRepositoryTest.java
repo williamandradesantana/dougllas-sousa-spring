@@ -8,6 +8,7 @@ import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -106,5 +107,24 @@ public class AuthorRepositoryTest {
 
         authorRepository.save(author); // utilizando o cascade não precisa usar o saveAll()
 //        bookRepository.saveAll(author.getBooks());
+    }
+
+    @Test
+    void authorsBooksWithLazyTest() {
+        var id = UUID.fromString("a6bd6d32-bc01-4f6d-bb59-6879b53c0178");
+        var author = authorRepository.findById(id).get();
+
+//        Buscar livros do autor
+        var books = bookRepository.findByAuthor(author);
+        author.setBooks(books);
+        author.getBooks().forEach(System.out::println);
+    }
+    @Test
+    void authorsBooksWithEagerTest() {
+        authorRepository
+                .findById(UUID.fromString("a6bd6d32-bc01-4f6d-bb59-6879b53c0178"))
+                .ifPresent(a -> {
+                    a.getBooks().forEach(System.out::println);
+                });
     }
 }

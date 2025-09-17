@@ -3,6 +3,7 @@ package io.github.williamandradesantana.libraryapi.model;
 import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "tb_books", schema = "public")
 @Data
+@ToString(exclude = "author")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
