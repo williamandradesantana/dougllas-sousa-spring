@@ -112,4 +112,30 @@ class BookRepositoryTest {
         System.out.println(book.getTitle());
         System.out.println(book.getAuthor().getName());
     }
+
+    @Test
+    void searchBookTitleTest() {
+        var title = "UFO";
+        bookRepository.findByTitle(title).forEach(System.out::println);
+    }
+
+    @Test
+    void searchBookIsbnTest() {
+        var isbn = "980";
+        bookRepository.findByIsbn(isbn).forEach(System.out::println);
+    }
+
+    @Test
+    void searchBookTitleAndPriceTest(){
+        var price = BigDecimal.valueOf(100.9);
+        var title = "UFO";
+        bookRepository.findByTitleAndPrice(title, price).forEach(System.out::println);
+    }
+
+    @Test
+    void searchBookTitleOrIsbnTest(){
+        var isbn = "980";
+        var title = "UFO";
+        bookRepository.findByTitleOrIsbn(title, isbn).forEach(System.out::println);
+    }
 }
