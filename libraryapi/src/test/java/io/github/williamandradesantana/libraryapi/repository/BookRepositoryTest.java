@@ -138,4 +138,10 @@ class BookRepositoryTest {
         var title = "UFO";
         bookRepository.findByTitleOrIsbn(title, isbn).forEach(System.out::println);
     }
+
+    @Test
+    void searchBookPublishDateBetweenTest(){
+        var start = LocalDate.of(2000, 1, 1);
+        bookRepository.findByPublishDateBetween(start, LocalDate.now()).forEach(System.out::println);
+    }
 }
