@@ -2,13 +2,18 @@ package io.github.williamandradesantana.libraryapi.repositories;
 
 import io.github.williamandradesantana.libraryapi.model.Author;
 import io.github.williamandradesantana.libraryapi.model.Book;
+import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @see BookRepositoryTest
+ */
 public interface BookRepository extends JpaRepository<Book, UUID> {
     /*
         Query method
@@ -29,4 +34,25 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     List<Book> findByTitleOrIsbn(String title, String isbn);
 
     List<Book> findByPublishDateBetween(LocalDate start, LocalDate end);
+
+    // JPQL -> Referência as entidades e as propriedades
+    // select b.* from Book b order by b.title, b.price;
+    @Query("select b from Book b order by b.title, b.price")
+    List<Book> findAllBooks();
+
+    @Query("select a from Book b join b.author a")
+    List<Author> authorsWithBooks();
+
+    @Query("select distinct b.title from Book b")
+    List<String> listBookTitles();
+
+    @Query("""
+            select distinct b.gender
+            from Book b
+            left join b.author a
+            where a.nationality = 'British'
+            order by b.gender
+            """)
+    List<String> listGenders();
+
 }

@@ -144,4 +144,24 @@ class BookRepositoryTest {
         var start = LocalDate.of(2000, 1, 1);
         bookRepository.findByPublishDateBetween(start, LocalDate.now()).forEach(System.out::println);
     }
+
+    @Test
+    void findAllBooksTest() {
+        bookRepository.findAllBooks().forEach(System.out::println);
+    }
+
+    @Test
+    void authorsWithBooksTest() {
+        bookRepository.authorsWithBooks().forEach(System.out::println);
+    }
+
+    @Test
+    void listBookNamesTest(){
+        bookRepository.listBookTitles().forEach(System.out::println);
+    }
+
+    @Test
+    void listGendersTest() {
+        bookRepository.listGenders().forEach(System.out::println);
+    }
 }
