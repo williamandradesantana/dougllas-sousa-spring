@@ -5,6 +5,7 @@ import io.github.williamandradesantana.libraryapi.model.Book;
 import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -53,6 +54,23 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
             where a.nationality = 'British'
             order by b.gender
             """)
-    List<String> listGenders();
+    List<String> listGendersWithNationalityBritish();
 
+    // Named parameters
+    @Query("""
+            select b
+            from Book b
+            where b.gender = :gender
+            order by :price
+            """)
+    List<Book> findByGender(@Param("gender") Gender gender, @Param("price") String price);
+
+    // Positional parameters
+    @Query("""
+            select b
+            from Book b
+            where b.gender = ?1
+            order by ?2
+            """)
+    List<Book> findByGenderPositionalParameters(Gender gender, String price);
 }

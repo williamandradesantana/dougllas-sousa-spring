@@ -162,6 +162,16 @@ class BookRepositoryTest {
 
     @Test
     void listGendersTest() {
-        bookRepository.listGenders().forEach(System.out::println);
+        bookRepository.listGendersWithNationalityBritish().forEach(System.out::println);
+    }
+
+    @Test
+    void findByGender() {
+        bookRepository.findByGender(Gender.SCIENCE, "price").forEach(System.out::println);
+    }
+
+    @Test
+    void findByGenderPositionalParametersTest() {
+        bookRepository.findByGenderPositionalParameters(Gender.ROMANCE, "price").forEach(System.out::println);
     }
 }
