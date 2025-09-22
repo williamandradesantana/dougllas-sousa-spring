@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -173,5 +174,17 @@ class BookRepositoryTest {
     @Test
     void findByGenderPositionalParametersTest() {
         bookRepository.findByGenderPositionalParameters(Gender.ROMANCE, "price").forEach(System.out::println);
+    }
+
+    @Test
+    void deleteByGenderTest() {
+        bookRepository.deleteByGender(Gender.ROMANCE);
+    }
+
+    @Test
+    void updatePublishDate() {
+        Optional<Book> book = bookRepository.findById(UUID.fromString("377f75b8-3d82-415d-8d71-65a1095fcc59"));
+
+        bookRepository.updatePublishDate(LocalDate.now(), book.get().getId());
     }
 }
