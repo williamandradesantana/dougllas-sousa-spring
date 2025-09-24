@@ -19,4 +19,9 @@ public class TransactionsTest {
     void simpleTransactionTest() {
         transactionsServices.execute();
     }
+
+    @Test
+    void transactionManagedStateTest() {
+        transactionsServices.updateWithoutUpdate();
+    }
 }
