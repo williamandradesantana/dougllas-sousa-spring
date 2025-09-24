@@ -1,21 +1,24 @@
-create table public.author (
-    id uuid not null primary key,
-    name varchar(100) not null,
-    date_of_birth date not null,
-    nationality varchar(50) not null
+create table tb_authors (
+	id uuid not null primary key,
+	name varchar(100) not null,
+	date_of_birth date not null,
+	nationality varchar(50) not null,
+	created_at timestamp,
+	updated_at timestamp,
+	user_id uuid
 );
 
-create table book (
-    id uuid not null primary key,
-    isbn varchar(20) not null,
-    title varchar(150) not null,
-    publication_date date not null,
-    gender varchar(30) not null,
-    price numeric(18, 2) not null,
-    author_id uuid not null references author(id),
+create table tb_books (
+	id uuid not null primary key,
+	isbn varchar(20) not null,
+	title varchar(150) not null,
+	publication_date date not null,
+	gender varchar(30) not null,
+	price numeric(18, 2) not null,
+	created_at timestamp,
+	updated_at timestamp,
+	user_id uuid,
 
+	author_id uuid not null references tb_authors(id),
 	constraint chk_gender check (gender in ('FICTION', 'FANTASY', 'MYSTERY', 'ROMANCE', 'BIOGRAPHY', 'SCIENCE'))
 );
-
-select * from public.author;
-select * from public.book;
