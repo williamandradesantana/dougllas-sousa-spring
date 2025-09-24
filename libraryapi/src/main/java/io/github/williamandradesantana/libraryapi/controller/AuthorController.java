@@ -2,15 +2,12 @@ package io.github.williamandradesantana.libraryapi.controller;
 
 import io.github.williamandradesantana.libraryapi.controller.dto.AuthorDTO;
 import io.github.williamandradesantana.libraryapi.services.AuthorService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/authors")
@@ -34,5 +31,21 @@ public class AuthorController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AuthorDTO> get(@PathVariable("id") String id) {
+        var authorId = UUID.fromString(id);
+        var author = authorService.get(authorId);
+
+        if (author.isPresent()) {
+            var entity = author.get();
+            var authorDTO = new AuthorDTO(
+                    entity.getId(), entity.getName(),
+                    entity.getDateOfBirth(), entity.getNationality());
+            return ResponseEntity.ok(authorDTO);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
