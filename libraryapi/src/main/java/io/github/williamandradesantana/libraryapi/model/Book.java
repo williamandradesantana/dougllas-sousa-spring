@@ -19,7 +19,7 @@ public class Book {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "ibsn", length = 20, nullable = false)
+    @Column(name = "isbn", length = 20, nullable = false)
     private String isbn;
 
     @Column(name = "title", length = 150, nullable = false)
