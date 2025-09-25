@@ -16,5 +16,9 @@ public interface AuthorRepository extends JpaRepository<Author, UUID> {
             """)
     List<String> howManyAuthorsStartsWithTheLetter(@Param("letter") String letter);
 
+    List<Author> findByNameContainingIgnoreCase(String name);
+    List<Author> findByNationalityContainingIgnoreCase(String nationality);
+    List<Author> findByNameContainingIgnoreCaseAndNationalityContainingIgnoreCase(String name, String nationality);
+
     List<Author> findByNameStartsWithIgnoreCase(String letter);
 }

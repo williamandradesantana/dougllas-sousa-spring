@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -60,5 +61,19 @@ public class AuthorController {
 
         authorService.delete(author.get());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<AuthorDTO>> search(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "nationality", required = false) String nationality
+    ) {
+        var authors = authorService.findAll(name, nationality);
+        var authorsDTO = authors.stream().map(
+                author -> new AuthorDTO(
+                        author.getId(), author.getName(), author.getDateOfBirth(), author.getNationality()
+                )
+        ).toList();
+        return ResponseEntity.ok().body(authorsDTO);
     }
 }
