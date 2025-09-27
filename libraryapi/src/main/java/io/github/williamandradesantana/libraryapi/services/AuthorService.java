@@ -1,8 +1,8 @@
 package io.github.williamandradesantana.libraryapi.services;
 
-import io.github.williamandradesantana.libraryapi.controller.dto.AuthorDTO;
 import io.github.williamandradesantana.libraryapi.model.Author;
 import io.github.williamandradesantana.libraryapi.repositories.AuthorRepository;
+import io.github.williamandradesantana.libraryapi.validator.AuthorValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +13,11 @@ import java.util.UUID;
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final AuthorValidator authorValidator;
 
-    public AuthorService(AuthorRepository authorRepository) {
+    public AuthorService(AuthorRepository authorRepository, AuthorValidator authorValidator) {
         this.authorRepository = authorRepository;
+        this.authorValidator = authorValidator;
     }
 
     public List<Author> findAll(String name, String nationality) {
@@ -32,6 +34,7 @@ public class AuthorService {
     }
 
     public Author save(Author author) {
+        authorValidator.validate(author);
         return authorRepository.save(author);
     }
 
@@ -47,6 +50,7 @@ public class AuthorService {
         if (author.getId() == null) {
             throw new IllegalArgumentException("This Author no exists in DB!");
         }
+        authorValidator.validate(author);
         authorRepository.save(author);
     }
 }

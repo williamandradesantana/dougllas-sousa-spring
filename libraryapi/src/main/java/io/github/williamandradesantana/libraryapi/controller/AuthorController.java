@@ -1,6 +1,8 @@
 package io.github.williamandradesantana.libraryapi.controller;
 
 import io.github.williamandradesantana.libraryapi.controller.dto.AuthorDTO;
+import io.github.williamandradesantana.libraryapi.controller.dto.ResponseError;
+import io.github.williamandradesantana.libraryapi.exceptions.DuplicateRegisterException;
 import io.github.williamandradesantana.libraryapi.services.AuthorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,17 +23,22 @@ public class AuthorController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Void> save(@RequestBody AuthorDTO author) {
-        var entityAuthor = author.mapAuthor();
-        authorService.save(entityAuthor);
+    public ResponseEntity<Object> save(@RequestBody AuthorDTO author) {
+        try {
+            var entityAuthor = author.mapAuthor();
+            authorService.save(entityAuthor);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(entityAuthor.getId())
-                .toUri();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(entityAuthor.getId())
+                    .toUri();
 
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
+        } catch (DuplicateRegisterException e) {
+            var error = ResponseError.conflictError(e.getMessage());
+            return ResponseEntity.status(error.status()).body(error);
+        }
     }
 
     @GetMapping("/{id}")
