@@ -42,4 +42,11 @@ public class AuthorService {
     public void delete(Author author) {
         authorRepository.delete(author);
     }
+
+    public void update(Author author) {
+        if (author.getId() == null) {
+            throw new IllegalArgumentException("This Author no exists in DB!");
+        }
+        authorRepository.save(author);
+    }
 }
