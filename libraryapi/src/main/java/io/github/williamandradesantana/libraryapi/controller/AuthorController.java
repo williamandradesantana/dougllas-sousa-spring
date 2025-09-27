@@ -2,6 +2,7 @@ package io.github.williamandradesantana.libraryapi.controller;
 
 import io.github.williamandradesantana.libraryapi.controller.dto.AuthorDTO;
 import io.github.williamandradesantana.libraryapi.controller.dto.ResponseError;
+import io.github.williamandradesantana.libraryapi.exceptions.AuthorHaveABookException;
 import io.github.williamandradesantana.libraryapi.exceptions.DuplicateRegisterException;
 import io.github.williamandradesantana.libraryapi.services.AuthorService;
 import org.springframework.http.ResponseEntity;
@@ -58,16 +59,21 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
-        var authorId = UUID.fromString(id);
-        var author = authorService.get(authorId);
+    public ResponseEntity<Object> delete(@PathVariable("id") String id) {
+        try {
+            var authorId = UUID.fromString(id);
+            var author = authorService.get(authorId);
 
-        if (author.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            if (author.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            authorService.delete(author.get());
+            return ResponseEntity.noContent().build();
+        } catch (AuthorHaveABookException e) {
+            var error = ResponseError.defaultError(e.getMessage());
+            return ResponseEntity.status(error.status()).body(error);
         }
-
-        authorService.delete(author.get());
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/")
@@ -85,21 +91,26 @@ public class AuthorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody AuthorDTO dto) {
-        var authorId = UUID.fromString(id);
-        var optionalAuthor = authorService.get(authorId);
+    public ResponseEntity<Object> update(@PathVariable("id") String id, @RequestBody AuthorDTO dto) {
+        try {
+            var authorId = UUID.fromString(id);
+            var optionalAuthor = authorService.get(authorId);
 
-        if (optionalAuthor.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            if (optionalAuthor.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            var author = optionalAuthor.get();
+            author.setName(dto.name());
+            author.setDateOfBirth(dto.dateOfBirth());
+            author.setNationality(dto.nationality());
+
+            authorService.update(author);
+
+            return ResponseEntity.noContent().build();
+        } catch (DuplicateRegisterException e) {
+            var error = ResponseError.conflictError(e.getMessage());
+            return ResponseEntity.status(error.status()).body(error);
         }
-
-        var author = optionalAuthor.get();
-        author.setName(dto.name());
-        author.setDateOfBirth(dto.dateOfBirth());
-        author.setNationality(dto.nationality());
-
-        authorService.update(author);
-
-        return ResponseEntity.noContent().build();
     }
 }

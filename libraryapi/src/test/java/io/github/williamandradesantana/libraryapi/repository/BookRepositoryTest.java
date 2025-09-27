@@ -27,14 +27,14 @@ class BookRepositoryTest {
     void saveBook() {
 
         var book = new Book();
-        book.setIsbn("980");
-        book.setPrice(BigDecimal.valueOf(100.9));
+        book.setIsbn("978-8569214021");
+        book.setPrice(BigDecimal.valueOf(12));
         book.setGender(Gender.BIOGRAPHY);
-        book.setTitle("UFO");
-        book.setPublishDate(LocalDate.of(1923, 1, 1));
+        book.setTitle("Mourinho Rockstar: As diversas faces do técnico mais polêmico do mundo");
+        book.setPublishDate(LocalDate.of(2024, 5, 7));
 
         Author author = authorRepository
-                .findById(UUID.fromString("e5968a98-624f-4a1e-8d0f-b6133cd0c89f"))
+                .findById(UUID.fromString("a766e0e0-a706-4450-9a97-e69f054aa429"))
                 .orElse(null);
 
         book.setAuthor(author);

@@ -1,7 +1,9 @@
 package io.github.williamandradesantana.libraryapi.services;
 
+import io.github.williamandradesantana.libraryapi.exceptions.AuthorHaveABookException;
 import io.github.williamandradesantana.libraryapi.model.Author;
 import io.github.williamandradesantana.libraryapi.repositories.AuthorRepository;
+import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
 import io.github.williamandradesantana.libraryapi.validator.AuthorValidator;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,13 @@ public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
+    private final BookRepository bookRepository;
 
-    public AuthorService(AuthorRepository authorRepository, AuthorValidator authorValidator) {
+    public AuthorService
+            (AuthorRepository authorRepository, AuthorValidator authorValidator, BookRepository bookRepository) {
         this.authorRepository = authorRepository;
         this.authorValidator = authorValidator;
+        this.bookRepository = bookRepository;
     }
 
     public List<Author> findAll(String name, String nationality) {
@@ -43,6 +48,9 @@ public class AuthorService {
     }
 
     public void delete(Author author) {
+        if (hasABook(author)) {
+            throw new AuthorHaveABookException("Cannot delete author because they have registered books.");
+        }
         authorRepository.delete(author);
     }
 
@@ -52,5 +60,9 @@ public class AuthorService {
         }
         authorValidator.validate(author);
         authorRepository.save(author);
+    }
+
+    public boolean hasABook(Author author) {
+        return bookRepository.existsByAuthor(author);
     }
 }
