@@ -5,6 +5,7 @@ import io.github.williamandradesantana.libraryapi.model.Author;
 import io.github.williamandradesantana.libraryapi.repositories.AuthorRepository;
 import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
 import io.github.williamandradesantana.libraryapi.validator.AuthorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,18 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
     private final BookRepository bookRepository;
-
-    public AuthorService
-            (AuthorRepository authorRepository, AuthorValidator authorValidator, BookRepository bookRepository) {
-        this.authorRepository = authorRepository;
-        this.authorValidator = authorValidator;
-        this.bookRepository = bookRepository;
-    }
 
     public List<Author> findAll(String name, String nationality) {
         if (name != null && nationality != null) {
