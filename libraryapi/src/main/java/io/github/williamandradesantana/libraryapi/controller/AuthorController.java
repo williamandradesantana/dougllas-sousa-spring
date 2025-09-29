@@ -5,6 +5,7 @@ import io.github.williamandradesantana.libraryapi.controller.dto.ResponseError;
 import io.github.williamandradesantana.libraryapi.exceptions.AuthorHaveABookException;
 import io.github.williamandradesantana.libraryapi.exceptions.DuplicateRegisterException;
 import io.github.williamandradesantana.libraryapi.services.AuthorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> save(@RequestBody AuthorDTO author) {
+    public ResponseEntity<Object> save(@Valid @RequestBody AuthorDTO author) {
         try {
             var entityAuthor = author.mapAuthor();
             authorService.save(entityAuthor);
@@ -89,7 +90,7 @@ public class AuthorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable("id") String id, @RequestBody AuthorDTO dto) {
+    public ResponseEntity<Object> update(@Valid @PathVariable("id") String id, @RequestBody AuthorDTO dto) {
         try {
             var authorId = UUID.fromString(id);
             var optionalAuthor = authorService.get(authorId);
