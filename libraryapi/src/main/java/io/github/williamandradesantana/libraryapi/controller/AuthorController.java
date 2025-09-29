@@ -80,7 +80,7 @@ public class AuthorController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "nationality", required = false) String nationality
     ) {
-        var authors = authorService.findAll(name, nationality);
+        var authors = authorService.searchByExample(name, nationality);
         var authorsDTO = authors.stream().map(
                 author -> new AuthorDTO(
                         author.getId(), author.getName(), author.getDateOfBirth(), author.getNationality()
