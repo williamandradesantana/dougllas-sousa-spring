@@ -21,11 +21,4 @@ public record AuthorDTO(
         @Size(min = 2, max = 100, message = "The name must be between 3 and 50 chars!")
         String nationality
 ) {
-    public Author mapAuthor() {
-        var author = new Author();
-        author.setName(this.name);
-        author.setNationality(this.nationality);
-        author.setDateOfBirth(this.dateOfBirth);
-        return author;
-    }
 }
