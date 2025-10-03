@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/authors")
 @RequiredArgsConstructor
-public class AuthorController {
+public class AuthorController implements GenericController {
 
     private final AuthorService authorService;
     private final AuthorMapper authorMapper;
@@ -30,11 +29,7 @@ public class AuthorController {
             var entityAuthor = authorMapper.toEntity(dto);
             authorService.save(entityAuthor);
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(entityAuthor.getId())
-                    .toUri();
+            URI location = createHeaderLocation(entityAuthor.getId());
 
             return ResponseEntity.created(location).build();
         } catch (DuplicateRegisterException e) {
