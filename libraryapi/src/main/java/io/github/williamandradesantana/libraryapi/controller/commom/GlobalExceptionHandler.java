@@ -37,4 +37,14 @@ public class GlobalExceptionHandler {
     public ResponseError handleAuthorHaveABookException(AuthorHaveABookException e) {
         return ResponseError.defaultError(e.getMessage());
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseError handleExceptionWithoutTreat(RuntimeException e) {
+        String message = e.getMessage();
+        if (message != null) {
+            message = message.split("\\n")[0];
+        }
+        return new ResponseError(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, List.of());
+    }
 }
