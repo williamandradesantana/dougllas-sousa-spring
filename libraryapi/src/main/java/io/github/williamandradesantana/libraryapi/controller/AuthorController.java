@@ -1,10 +1,7 @@
 package io.github.williamandradesantana.libraryapi.controller;
 
 import io.github.williamandradesantana.libraryapi.controller.dto.AuthorDTO;
-import io.github.williamandradesantana.libraryapi.controller.dto.ResponseError;
 import io.github.williamandradesantana.libraryapi.controller.mappers.AuthorMapper;
-import io.github.williamandradesantana.libraryapi.exceptions.AuthorHaveABookException;
-import io.github.williamandradesantana.libraryapi.exceptions.DuplicateRegisterException;
 import io.github.williamandradesantana.libraryapi.services.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +22,11 @@ public class AuthorController implements GenericController {
 
     @PostMapping("/")
     public ResponseEntity<Object> save(@Valid @RequestBody AuthorDTO dto) {
-        try {
-            var entityAuthor = authorMapper.toEntity(dto);
-            authorService.save(entityAuthor);
+        var entityAuthor = authorMapper.toEntity(dto);
+        authorService.save(entityAuthor);
 
-            URI location = createHeaderLocation(entityAuthor.getId());
-
-            return ResponseEntity.created(location).build();
-        } catch (DuplicateRegisterException e) {
-            var error = ResponseError.conflictError(e.getMessage());
-            return ResponseEntity.status(error.status()).body(error);
-        }
+        URI location = createHeaderLocation(entityAuthor.getId());
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
@@ -50,20 +41,15 @@ public class AuthorController implements GenericController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable("id") String id) {
-        try {
-            var authorId = UUID.fromString(id);
-            var author = authorService.get(authorId);
+        var authorId = UUID.fromString(id);
+        var author = authorService.get(authorId);
 
-            if (author.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            authorService.delete(author.get());
-            return ResponseEntity.noContent().build();
-        } catch (AuthorHaveABookException e) {
-            var error = ResponseError.defaultError(e.getMessage());
-            return ResponseEntity.status(error.status()).body(error);
+        if (author.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+
+        authorService.delete(author.get());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/")
@@ -79,25 +65,19 @@ public class AuthorController implements GenericController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@Valid @PathVariable("id") String id, @RequestBody AuthorDTO dto) {
-        try {
-            var authorId = UUID.fromString(id);
-            var optionalAuthor = authorService.get(authorId);
+        var authorId = UUID.fromString(id);
+        var optionalAuthor = authorService.get(authorId);
 
-            if (optionalAuthor.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            var author = optionalAuthor.get();
-            author.setName(dto.name());
-            author.setDateOfBirth(dto.dateOfBirth());
-            author.setNationality(dto.nationality());
-
-            authorService.update(author);
-
-            return ResponseEntity.noContent().build();
-        } catch (DuplicateRegisterException e) {
-            var error = ResponseError.conflictError(e.getMessage());
-            return ResponseEntity.status(error.status()).body(error);
+        if (optionalAuthor.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+
+        var author = optionalAuthor.get();
+        author.setName(dto.name());
+        author.setDateOfBirth(dto.dateOfBirth());
+        author.setNationality(dto.nationality());
+
+        authorService.update(author);
+        return ResponseEntity.noContent().build();
     }
 }

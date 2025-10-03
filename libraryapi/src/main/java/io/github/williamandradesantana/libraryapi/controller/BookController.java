@@ -1,9 +1,7 @@
 package io.github.williamandradesantana.libraryapi.controller;
 
 import io.github.williamandradesantana.libraryapi.controller.dto.BookRegisterDTO;
-import io.github.williamandradesantana.libraryapi.controller.dto.ResponseError;
 import io.github.williamandradesantana.libraryapi.controller.mappers.BookMapper;
-import io.github.williamandradesantana.libraryapi.exceptions.DuplicateRegisterException;
 import io.github.williamandradesantana.libraryapi.services.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +23,10 @@ public class BookController implements GenericController {
 
     @PostMapping("/")
     public ResponseEntity<Object> create(@Valid @RequestBody BookRegisterDTO dto) {
-        try {
-            var book = bookMapper.toEntity(dto);
-            bookService.create(book);
-            URI location = createHeaderLocation(book.getId());
-            return ResponseEntity.created(location).build();
-        } catch (DuplicateRegisterException e) {
-            var error = ResponseError.conflictError("ISBN duplicated!");
-            return ResponseEntity.status(error.status()).body(error.message());
-        }
+        var book = bookMapper.toEntity(dto);
+        bookService.create(book);
+        URI location = createHeaderLocation(book.getId());
+        return ResponseEntity.created(location).build();
 
     }
 }
