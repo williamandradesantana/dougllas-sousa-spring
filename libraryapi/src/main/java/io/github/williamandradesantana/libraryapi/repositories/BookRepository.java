@@ -4,6 +4,7 @@ import io.github.williamandradesantana.libraryapi.model.Author;
 import io.github.williamandradesantana.libraryapi.model.Book;
 import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +18,7 @@ import java.util.UUID;
 /**
  * @see BookRepositoryTest
  */
-public interface BookRepository extends JpaRepository<Book, UUID> {
+public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificationExecutor<Book> {
     /*
         Query method
         select * from tb_books where author_id = id;

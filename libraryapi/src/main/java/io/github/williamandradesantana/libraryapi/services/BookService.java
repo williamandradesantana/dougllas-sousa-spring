@@ -1,12 +1,15 @@
 package io.github.williamandradesantana.libraryapi.services;
 
-import io.github.williamandradesantana.libraryapi.controller.dto.SearchBookDTO;
 import io.github.williamandradesantana.libraryapi.model.Book;
+import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import io.github.williamandradesantana.libraryapi.repositories.AuthorRepository;
 import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,6 +22,14 @@ public class BookService {
 
     public Book create(Book book) {
         return bookRepository.save(book);
+    }
+
+
+    public List<Book> searchBySpecification(
+            String isbn, String title, String authorName, Gender gender, Integer yearOfPublication
+    ) {
+        Specification<Book> specs = null;
+        return bookRepository.findAll(specs);
     }
 
     public Optional<Book> get(UUID bookId) {
