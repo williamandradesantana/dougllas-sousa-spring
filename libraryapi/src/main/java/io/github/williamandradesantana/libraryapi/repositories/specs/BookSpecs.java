@@ -19,4 +19,13 @@ public class BookSpecs {
     public static Specification<Book> genderEqual(Gender gender) {
         return (root, query, cb) -> cb.equal(root.get("gender"), gender);
     }
+
+    public static Specification<Book> yearOfPublicationEqual(Integer yearOfPublication) {
+        // and to_char(publishDate, 'YYYY') = :yearOfPublication
+        return (root, query, cb) ->
+                cb.equal(
+                        cb.function("to_char", String.class, root.get("publishDate"), cb.literal("YYYY")),
+                        yearOfPublication.toString()
+        );
+    }
 }

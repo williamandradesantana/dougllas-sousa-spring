@@ -3,6 +3,8 @@ package io.github.williamandradesantana.libraryapi.controller;
 import io.github.williamandradesantana.libraryapi.controller.dto.BookRegisterDTO;
 import io.github.williamandradesantana.libraryapi.controller.dto.SearchBookDTO;
 import io.github.williamandradesantana.libraryapi.controller.mappers.BookMapper;
+import io.github.williamandradesantana.libraryapi.model.Book;
+import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import io.github.williamandradesantana.libraryapi.services.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -46,5 +49,19 @@ public class BookController implements GenericController {
                     return ResponseEntity.noContent().build();
                 }
         ).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<SearchBookDTO>> findAll(
+            @RequestParam(value = "isbn", required = false) String isbn,
+            @RequestParam(value = "author_name", required = false) String authorName,
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "gender", required = false) Gender gender,
+            @RequestParam(value = "year_of_publication", required = false) Integer yearOfPublication
+    ) {
+        var books = bookService
+                .searchBySpecification(isbn, title, authorName, gender, yearOfPublication)
+                .stream().map(bookMapper::toDTO).toList();
+        return ResponseEntity.ok().body(books);
     }
 }
