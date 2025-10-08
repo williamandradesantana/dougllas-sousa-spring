@@ -1,7 +1,10 @@
 package io.github.williamandradesantana.libraryapi.repositories.specs;
 
+import io.github.williamandradesantana.libraryapi.model.Author;
 import io.github.williamandradesantana.libraryapi.model.Book;
 import io.github.williamandradesantana.libraryapi.model.enums.Gender;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookSpecs {
@@ -26,6 +29,16 @@ public class BookSpecs {
                 cb.equal(
                         cb.function("to_char", String.class, root.get("publishDate"), cb.literal("YYYY")),
                         yearOfPublication.toString()
+        );
+    }
+
+    public static Specification<Book> authorNameLike(String authorName) {
+        return ((root, query, cb) ->
+//            cb.like(cb.upper( root.join("author").get("name")), '%' + authorName.toUpperCase() + '%')
+        {
+            Join<Book, Author> author = root.join("author", JoinType.LEFT);
+            return cb.like(cb.upper(author.get("name")), '%' + authorName.toUpperCase() + '%');
+        }
         );
     }
 }

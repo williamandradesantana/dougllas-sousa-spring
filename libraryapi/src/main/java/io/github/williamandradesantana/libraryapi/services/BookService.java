@@ -42,6 +42,7 @@ public class BookService {
         if (title != null) specs = specs.and(titleEqual(title));
         if (gender != null) specs = specs.and(genderEqual(gender));
         if (yearOfPublication != null) specs = specs.and(yearOfPublicationEqual(yearOfPublication));
+        if (authorName != null) specs = specs.and(authorNameLike(authorName));
 
         return bookRepository.findAll(specs);
     }
