@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -26,7 +27,7 @@ public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificat
     List<Book> findByAuthor(Author author);
 
     // select * from tb_books where isbn = isbn;
-    List<Book> findByIsbn(String isbn);
+    Optional<Book> findByIsbn(String isbn);
 
     // select * from tb_books where title = title; caso seja único retorna a entidade
     List<Book> findByTitle(String title);
@@ -87,4 +88,6 @@ public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificat
     @Query("update Book b set b.publishDate = :newDate where b.id = :id")
     void updatePublishDate(@Param("newDate") LocalDate newDate, @Param("id") UUID id);
     boolean existsByAuthor(Author author);
+
+    boolean existsByIsbn(Book book);
 }

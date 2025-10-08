@@ -2,26 +2,27 @@ package io.github.williamandradesantana.libraryapi.services;
 
 import io.github.williamandradesantana.libraryapi.model.Book;
 import io.github.williamandradesantana.libraryapi.model.enums.Gender;
-import io.github.williamandradesantana.libraryapi.repositories.AuthorRepository;
 import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
-import io.github.williamandradesantana.libraryapi.repositories.specs.BookSpecs;
+import io.github.williamandradesantana.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import static io.github.williamandradesantana.libraryapi.repositories.specs.BookSpecs.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static io.github.williamandradesantana.libraryapi.repositories.specs.BookSpecs.*;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
+    private final BookValidator bookValidator;
 
     public Book create(Book book) {
+        bookValidator.validate(book);
         return bookRepository.save(book);
     }
 
@@ -59,6 +60,7 @@ public class BookService {
         if (entity.getId() == null) {
             throw new IllegalArgumentException("This book no exists in DB!");
         }
+        bookValidator.validate(entity);
         bookRepository.save(entity);
     }
 }

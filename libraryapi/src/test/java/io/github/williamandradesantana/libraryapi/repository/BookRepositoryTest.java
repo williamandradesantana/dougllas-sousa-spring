@@ -123,7 +123,7 @@ class BookRepositoryTest {
     @Test
     void searchBookIsbnTest() {
         var isbn = "980";
-        bookRepository.findByIsbn(isbn).forEach(System.out::println);
+        bookRepository.findByIsbn(isbn).ifPresent(System.out::println);
     }
 
     @Test
