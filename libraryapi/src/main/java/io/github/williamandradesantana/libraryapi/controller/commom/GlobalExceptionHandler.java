@@ -4,6 +4,7 @@ import io.github.williamandradesantana.libraryapi.controller.dto.MyFieldError;
 import io.github.williamandradesantana.libraryapi.controller.dto.ResponseError;
 import io.github.williamandradesantana.libraryapi.exceptions.AuthorHaveABookException;
 import io.github.williamandradesantana.libraryapi.exceptions.DuplicateRegisterException;
+import io.github.williamandradesantana.libraryapi.exceptions.InvalidFieldException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +17,8 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String MESSAGE_VALIDATION_ERROR = "Validation error";
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseError handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -23,7 +26,7 @@ public class GlobalExceptionHandler {
         List<MyFieldError> list = fieldErrors.stream()
                 .map(fe -> new MyFieldError(fe.getField(), fe.getDefaultMessage()))
                 .toList();
-        return new ResponseError(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Validation error", list);
+        return new ResponseError(HttpStatus.UNPROCESSABLE_ENTITY.value(), MESSAGE_VALIDATION_ERROR, list);
     }
 
     @ExceptionHandler(DuplicateRegisterException.class)
@@ -36,6 +39,16 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError handleAuthorHaveABookException(AuthorHaveABookException e) {
         return ResponseError.defaultError(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidFieldException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseError handleInvalidFieldException(InvalidFieldException e) {
+        return new ResponseError(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                MESSAGE_VALIDATION_ERROR,
+                List.of(new MyFieldError(e.getField(), e.getMessage()))
+        );
     }
 
     @ExceptionHandler(RuntimeException.class)
