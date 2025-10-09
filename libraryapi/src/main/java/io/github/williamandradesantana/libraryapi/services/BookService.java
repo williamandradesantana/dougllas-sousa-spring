@@ -5,6 +5,10 @@ import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
 import io.github.williamandradesantana.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +31,15 @@ public class BookService {
     }
 
 
-    public List<Book> searchBySpecification(
-            String isbn, String title, String authorName, Gender gender, Integer yearOfPublication
+    public Page<Book> searchBySpecification(
+            String isbn,
+            String title,
+            String authorName,
+            Gender gender,
+            Integer yearOfPublication,
+            Integer page,
+            Integer pageSize
     ) {
-//        Specification<Book> specs = Specification.where(
-//                BookSpecs.genderEqual(gender)
-//                .and(BookSpecs.isbnEqual(isbn))
-//                .and(BookSpecs.titleEqual(title))
-//        );
         Specification<Book> specs = Specification.where(
                 (root, query, cb) -> cb.conjunction()
         );
@@ -45,7 +50,8 @@ public class BookService {
         if (yearOfPublication != null) specs = specs.and(yearOfPublicationEqual(yearOfPublication));
         if (authorName != null) specs = specs.and(authorNameLike(authorName));
 
-        return bookRepository.findAll(specs);
+        Pageable pageableRequest = PageRequest.of(page, pageSize, Sort.by("title").ascending());
+        return bookRepository.findAll(specs, pageableRequest);
     }
 
     public Optional<Book> get(UUID bookId) {

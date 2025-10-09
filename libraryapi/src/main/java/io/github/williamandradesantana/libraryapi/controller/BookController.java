@@ -8,6 +8,9 @@ import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import io.github.williamandradesantana.libraryapi.services.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,17 +55,18 @@ public class BookController implements GenericController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<SearchBookDTO>> findAll(
+    public ResponseEntity<Page<SearchBookDTO>> findAll(
             @RequestParam(value = "isbn", required = false) String isbn,
             @RequestParam(value = "author_name", required = false) String authorName,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "gender", required = false) Gender gender,
-            @RequestParam(value = "year_of_publication", required = false) Integer yearOfPublication
+            @RequestParam(value = "year_of_publication", required = false) Integer yearOfPublication,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "page_size", defaultValue = "5") Integer pageSize
     ) {
-        var books = bookService
-                .searchBySpecification(isbn, title, authorName, gender, yearOfPublication)
-                .stream().map(bookMapper::toDTO).toList();
-        return ResponseEntity.ok().body(books);
+        var pagination = bookService.searchBySpecification(isbn, title, authorName, gender, yearOfPublication, page, pageSize);
+        Page<SearchBookDTO> map = pagination.map(bookMapper::toDTO);
+        return ResponseEntity.ok().body(map);
     }
 
     @PutMapping("/{id}")
