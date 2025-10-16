@@ -1,5 +1,7 @@
 package io.github.williamandradesantana.libraryapi.config;
 
+import io.github.williamandradesantana.libraryapi.security.CustomUserDetailsService;
+import io.github.williamandradesantana.libraryapi.services.UserServices;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -46,18 +48,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails user = User.builder()
-                .username("wbs")
-                .password(encoder.encode("1234"))
-                .roles("USER")
-                .build();
-
-        var admin = User.builder()
-                .username("admin")
-                .password(encoder.encode("1234"))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user, admin);
+    public UserDetailsService userDetailsService(UserServices userServices) {
+//        UserDetails user = User.builder()
+//                .username("wbs")
+//                .password(encoder.encode("1234"))
+//                .roles("USER")
+//                .build();
+//
+//        var admin = User.builder()
+//                .username("admin")
+//                .password(encoder.encode("1234"))
+//                .roles("ADMIN")
+//                .build();
+//        return new InMemoryUserDetailsManager(user, admin);
+        return new CustomUserDetailsService(userServices);
     }
 }
