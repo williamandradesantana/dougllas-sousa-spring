@@ -6,6 +6,7 @@ import io.github.williamandradesantana.libraryapi.services.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -21,6 +22,7 @@ public class AuthorController implements GenericController {
     private final AuthorMapper authorMapper;
 
     @PostMapping("/")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Object> save(@Valid @RequestBody AuthorDTO dto) {
         var entityAuthor = authorMapper.toEntity(dto);
         authorService.save(entityAuthor);
@@ -30,6 +32,7 @@ public class AuthorController implements GenericController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER', 'OPERATOR')")
     public ResponseEntity<AuthorDTO> get(@PathVariable("id") String id) {
         var authorId = UUID.fromString(id);
 
@@ -40,6 +43,7 @@ public class AuthorController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Object> delete(@PathVariable("id") String id) {
         var authorId = UUID.fromString(id);
         var author = authorService.get(authorId);
@@ -53,6 +57,7 @@ public class AuthorController implements GenericController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('MANAGER', 'OPERATOR')")
     public ResponseEntity<List<AuthorDTO>> search(
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "nationality", required = false) String nationality
@@ -64,6 +69,7 @@ public class AuthorController implements GenericController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Object> update(@Valid @PathVariable("id") String id, @RequestBody AuthorDTO dto) {
         var authorId = UUID.fromString(id);
         var optionalAuthor = authorService.get(authorId);

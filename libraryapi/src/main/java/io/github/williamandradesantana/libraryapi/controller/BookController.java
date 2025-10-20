@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,6 +25,7 @@ public class BookController implements GenericController {
     private final BookMapper bookMapper;
 
     @PostMapping("/")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<Object> create(@Valid @RequestBody BookRegisterDTO dto) {
         var book = bookMapper.toEntity(dto);
         bookService.create(book);
@@ -32,6 +34,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<SearchBookDTO> get(@PathVariable("id") String id) {
         var bookId = UUID.fromString(id);
 
@@ -42,6 +45,7 @@ public class BookController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<Object> delete(@PathVariable("id") String id) {
         return bookService.get(UUID.fromString(id)).map(
                 book -> {
@@ -52,6 +56,7 @@ public class BookController implements GenericController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<Page<SearchBookDTO>> findAll(
             @RequestParam(value = "isbn", required = false) String isbn,
             @RequestParam(value = "author_name", required = false) String authorName,
@@ -67,6 +72,7 @@ public class BookController implements GenericController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERATOR', 'MANAGER')")
     public ResponseEntity<Object> update(@PathVariable("id") String id, @RequestBody BookRegisterDTO dto) {
         return bookService.get(UUID.fromString(id)).map(b -> {
             Book entity = bookMapper.toEntity(dto);

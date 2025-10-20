@@ -6,6 +6,7 @@ import io.github.williamandradesantana.libraryapi.exceptions.AuthorHaveABookExce
 import io.github.williamandradesantana.libraryapi.exceptions.DuplicateRegisterException;
 import io.github.williamandradesantana.libraryapi.exceptions.InvalidFieldException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -49,6 +50,12 @@ public class GlobalExceptionHandler {
                 MESSAGE_VALIDATION_ERROR,
                 List.of(new MyFieldError(e.getField(), e.getMessage()))
         );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseError handleAccessDeniedException(AccessDeniedException e) {
+        return new ResponseError(HttpStatus.FORBIDDEN.value(), "Access denied!", List.of());
     }
 
     @ExceptionHandler(RuntimeException.class)
