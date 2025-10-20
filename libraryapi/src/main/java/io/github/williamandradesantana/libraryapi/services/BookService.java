@@ -1,8 +1,10 @@
 package io.github.williamandradesantana.libraryapi.services;
 
 import io.github.williamandradesantana.libraryapi.model.Book;
+import io.github.williamandradesantana.libraryapi.model.User;
 import io.github.williamandradesantana.libraryapi.model.enums.Gender;
 import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
+import io.github.williamandradesantana.libraryapi.security.SecurityService;
 import io.github.williamandradesantana.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,9 +26,12 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookValidator bookValidator;
+    private final SecurityService securityService;
 
     public Book create(Book book) {
         bookValidator.validate(book);
+        User user = securityService.getUserByLogged();
+        book.setUser(user);
         return bookRepository.save(book);
     }
 

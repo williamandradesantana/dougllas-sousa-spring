@@ -40,8 +40,9 @@ public class Author {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> books;

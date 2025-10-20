@@ -2,8 +2,10 @@ package io.github.williamandradesantana.libraryapi.services;
 
 import io.github.williamandradesantana.libraryapi.exceptions.AuthorHaveABookException;
 import io.github.williamandradesantana.libraryapi.model.Author;
+import io.github.williamandradesantana.libraryapi.model.User;
 import io.github.williamandradesantana.libraryapi.repositories.AuthorRepository;
 import io.github.williamandradesantana.libraryapi.repositories.BookRepository;
+import io.github.williamandradesantana.libraryapi.security.SecurityService;
 import io.github.williamandradesantana.libraryapi.validator.AuthorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -21,6 +23,7 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
     private final BookRepository bookRepository;
+    private final SecurityService securityService;
 
     public List<Author> findAll(String name, String nationality) {
         if (name != null && nationality != null) {
@@ -52,6 +55,8 @@ public class AuthorService {
 
     public Author save(Author author) {
         authorValidator.validate(author);
+        User user = securityService.getUserByLogged();
+        author.setUser(user);
         return authorRepository.save(author);
     }
 
