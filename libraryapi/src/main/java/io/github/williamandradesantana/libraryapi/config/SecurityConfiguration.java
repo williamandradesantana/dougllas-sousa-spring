@@ -24,10 +24,10 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .formLogin(Customizer.withDefaults())
-                .formLogin(configurer -> {
-                    configurer.loginPage("/login");
-                })
+                .formLogin(Customizer.withDefaults())
+//                .formLogin(configurer -> {
+//                    configurer.loginPage("/login");
+//                })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
@@ -35,6 +35,7 @@ public class SecurityConfiguration {
 
                     authorize.anyRequest().authenticated();
                 })
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 
@@ -43,7 +44,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10);
     }
 
-    @Bean
+//    @Bean
     public UserDetailsService userDetailsService(UserServices userServices) {
 //        UserDetails user = User.builder()
 //                .username("wbs")
