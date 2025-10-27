@@ -23,9 +23,13 @@ create table tb_books (
 	constraint chk_gender check (gender in ('FICTION', 'FANTASY', 'MYSTERY', 'ROMANCE', 'BIOGRAPHY', 'SCIENCE'))
 );
 
+alter table tb_users add column email varchar(150);
+drop table tb_users;
+
 create table tb_users (
     id uuid not null primary key,
     login varchar(20) not null unique,
     password varchar(300) not null,
+    email varchar(150) not null,
     roles varchar[]
 );
