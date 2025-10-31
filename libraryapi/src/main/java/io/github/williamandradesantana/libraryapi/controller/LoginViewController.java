@@ -18,7 +18,7 @@ public class LoginViewController {
     @ResponseBody
     public String home(Authentication authentication) {
         if (authentication instanceof CustomAuthentication customAuthentication) {
-            return customAuthentication.getUser().toString();
+            return "Hello World! " + customAuthentication.getName();
         }
         return "Hello World! " + authentication.getName();
     }
