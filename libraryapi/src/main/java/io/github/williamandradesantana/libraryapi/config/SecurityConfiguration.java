@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
+                    authorize.requestMatchers("/clients/").permitAll();
 
                     authorize.anyRequest().authenticated();
                 })
