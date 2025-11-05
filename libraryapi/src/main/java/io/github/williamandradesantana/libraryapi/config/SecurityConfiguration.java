@@ -47,28 +47,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-
-//    @Bean
-    public UserDetailsService userDetailsService(UserServices userServices) {
-//        UserDetails user = User.builder()
-//                .username("wbs")
-//                .password(encoder.encode("1234"))
-//                .roles("USER")
-//                .build();
-//
-//        var admin = User.builder()
-//                .username("admin")
-//                .password(encoder.encode("1234"))
-//                .roles("ADMIN")
-//                .build();
-//        return new InMemoryUserDetailsManager(user, admin);
-        return new CustomUserDetailsService(userServices);
-    }
-
-    @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults(""); // ignora o ROLE_
     }
