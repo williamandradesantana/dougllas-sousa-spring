@@ -49,7 +49,7 @@ public class SecurityConfiguration {
         return new GrantedAuthorityDefaults(""); // ignora o ROLE_
     }
 
-    // Configura not token jwt o prefixo "SCOPE"
+    // Configura token jwt o prefixo "SCOPE"
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
