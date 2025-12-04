@@ -1,22 +1,29 @@
 package io.github.williamandradesantana.libraryapi.config;
 
+import io.github.williamandradesantana.libraryapi.security.CustomAuthentication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -68,5 +75,20 @@ public class AuthorizationServerConfiguration {
                 .jwkSetEndpoint("/oauth2/jwks")
                 .oidcLogoutEndpoint("/oauth2/logout")
                 .build();
+    }
+
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
+        return context -> {
+            var principal = context.getPrincipal();
+
+            if (principal instanceof CustomAuthentication authentication) {
+                Collection<GrantedAuthority> authorities = authentication.getAuthorities();
+                List<String> authoritiesList = authorities.stream().map(GrantedAuthority::getAuthority).toList();
+                context.getClaims()
+                        .claim("authorities", authoritiesList)
+                        .claim("email", authentication.getUser().getEmail());
+            }
+        };
     }
 }
