@@ -61,7 +61,7 @@ public class AuthorizationServerConfiguration {
                 .tokenIntrospectionEndpoint("/oauth2/introspect")
                 // revogar
                 .tokenRevocationEndpoint("/oauth2/revoke")
-                .authorizationEndpoint("/auth2/authorize")
+                .authorizationEndpoint("/oauth2/authorize")
                 // user info OPEN ID CONNECT
                 .oidcUserInfoEndpoint("/oauth2/userinfo")
                 // get public key for verify assign token
