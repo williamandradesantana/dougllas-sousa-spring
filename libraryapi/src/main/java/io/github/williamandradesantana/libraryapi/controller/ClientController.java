@@ -6,6 +6,7 @@ import io.github.williamandradesantana.libraryapi.controller.mappers.ClientMappe
 import io.github.williamandradesantana.libraryapi.services.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/clients")
 @RequiredArgsConstructor
+@Slf4j
 public class ClientController implements GenericController {
 
     private final ClientService clientService;
@@ -23,6 +25,7 @@ public class ClientController implements GenericController {
     @PostMapping("/")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Object> save(@Valid @RequestBody ClientDTO dto) {
+        log.info("Registrando novo Client: {} - scope: {}", dto.clientId(), dto.scope());
         var client = clientMapper.toEntity(dto);
         clientService.create(client);
 

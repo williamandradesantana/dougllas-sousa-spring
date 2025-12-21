@@ -5,6 +5,7 @@ import io.github.williamandradesantana.libraryapi.controller.dto.ResponseError;
 import io.github.williamandradesantana.libraryapi.exceptions.AuthorHaveABookException;
 import io.github.williamandradesantana.libraryapi.exceptions.DuplicateRegisterException;
 import io.github.williamandradesantana.libraryapi.exceptions.InvalidFieldException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     private static final String MESSAGE_VALIDATION_ERROR = "Validation error";
@@ -23,6 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseError handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error("Validation error: {}", e.getMessage());
         List<FieldError> fieldErrors = e.getFieldErrors();
         List<MyFieldError> list = fieldErrors.stream()
                 .map(fe -> new MyFieldError(fe.getField(), fe.getDefaultMessage()))
@@ -61,6 +64,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseError handleExceptionWithoutTreat(RuntimeException e) {
+        log.error("Unexpected error: {}", e.getMessage());
         String message = e.getMessage();
         if (message != null) {
             message = message.split("\\n")[0];

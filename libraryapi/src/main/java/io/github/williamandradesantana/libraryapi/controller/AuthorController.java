@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -37,6 +38,8 @@ public class AuthorController implements GenericController {
             @ApiResponse(responseCode = "409", description = "Author already exists!")
     })
     public ResponseEntity<Object> save(@Valid @RequestBody AuthorDTO dto) {
+        log.info("Cadastrando novo autor: {}", dto.name());
+
         var entityAuthor = authorMapper.toEntity(dto);
         authorService.save(entityAuthor);
 
@@ -69,6 +72,7 @@ public class AuthorController implements GenericController {
             @ApiResponse(responseCode = "400", description = "Cannot delete author because they have registered books.")
     })
     public ResponseEntity<Object> delete(@PathVariable("id") String id) {
+        log.info("Deletando author de ID: {}", id);
         var authorId = UUID.fromString(id);
         var author = authorService.get(authorId);
 
@@ -90,12 +94,6 @@ public class AuthorController implements GenericController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "nationality", required = false) String nationality
     ) {
-        log.trace("Pesquisa autores");
-        log.debug("Pesquisa autores");
-        log.info("Pesquisa autores");
-        log.warn("Pesquisa autores");
-        log.error("Pesquisa autores");
-
         var authors = authorService.searchByExample(name, nationality);
         var authorsDTO = authors.stream().map(authorMapper::toDTO).toList();
 

@@ -31,7 +31,7 @@ logging:
     root: warn # trace - debug - warn - info - error
     io:
       github:
-        williamandradesantana: warn
+        williamandradesantana: trace
     org:
       springframework:
         web: debug
