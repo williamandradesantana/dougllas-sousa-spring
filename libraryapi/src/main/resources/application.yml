@@ -61,6 +61,12 @@ springdoc:
 # production
 ---
 spring:
+
+  datasource:
+    url: ${DATASOURCE_URL_PROD:jdbc:postgresql://localhost:5433/library}
+    username: ${DATASOURCE_USERNAME_PROD:postgresprod}
+    password: ${DATASOURCE_PASSWORD_PROD:postgresprod}
+
   config:
     activate:
       on-profile: production
