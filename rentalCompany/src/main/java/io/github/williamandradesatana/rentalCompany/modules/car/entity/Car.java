@@ -11,7 +11,8 @@ public class Car {
     }
 
     public double calculateRentPrice(int quantityDays) {
-        return quantityDays * getDailyPrice();
+        double total = quantityDays * getDailyPrice();
+        return (quantityDays >= 5) ? total - 50 : total;
     }
 
     public String getModel() {
